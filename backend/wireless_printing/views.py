@@ -7,6 +7,7 @@ from rest_framework import viewsets
 from rest_framework import views
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from .models import Test, UserData
 from .serializers import TestSerializer
 
@@ -28,11 +29,10 @@ class UserSignUp(views.APIView):
         try:
             if not request.user.is_authenticated:
                 if not User.objects.filter(email=email).exists():
-                    User.objects.create_user(
+                    user = User.objects.create_user(
                         username=username, password=password, email=email)
-                    user = authenticate(username=username, password=password)
-                    login(request, user)
-                    return Response("Sign up successful")
+                    token = Token.objects.create(user=user)
+                    return Response({"status": "Sign up successful", "token": token.key})
                 else:
                     return Response("User already exists")
             else:
@@ -45,35 +45,30 @@ class UserLogin(views.APIView):
     def post(self, request):
         username = request.data['name']
         password = request.data['password']
-        try:
-            if not request.user.is_authenticated:
-                user = authenticate(username=username, password=password)
-                if user is not None:
-                    login(request, user)
-                    return Response("Login successful")
-                else:
-                    return Response("Username or password incorrect")
-            else:
-                return Response("You are already logged in")
-        except Exception as e:
-            return Response("Sign up failed. "+str(e))
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            token = Token.objects.create(user=user)
+            return Response({"status": "Login successful", "token": token.key})
+
+        else:
+            return Response("Username or password incorrect")
 
 
 class UserLogout(views.APIView):
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request):
-        if request.user.is_authenticated:
-            logout(request)
-            return Response("Logout successful")
-        else:
-            return Response("You must log in to log out")
+        Token.objects.get(user=request.user).delete()
+        return Response("Logout successful")
 
 
 class GetCredits(views.APIView):
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request):
-        if request.user.is_authenticated:
-            credits = UserData.objects.get(id=request.user)
-            res = serializers.serialize("json", [credits])
-            return Response(res)
+        credits = UserData.objects.get(id=request.user)
+        res = serializers.serialize("json", [credits])
+        return Response(res)
 
 
 def remove_credits(user, credits_to_remove):
