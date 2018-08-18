@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework import views
 from rest_framework.response import Response
-from .models import Test
+from .models import Test, UserData
 from .serializers import TestSerializer
 
 
@@ -65,3 +65,11 @@ class UserLogout(views.APIView):
             return Response("Logout successful")
         else:
             return Response("You must log in to log out")
+
+
+class GetCredits(views.APIView):
+    def get(self, request):
+        if request.user.is_authenticated:
+            credits = UserData.objects.get(id=request.user)
+            res = serializers.serialize("json", credits)
+            return Response(res)
