@@ -25,14 +25,35 @@ class UserSignUp(views.APIView):
         password = request.data['password']
         email = request.data['email']
         try:
-            if not User.objects.filter(email=email).exists():
-                User.objects.create_user(
-                    username=username, password=password, email=email)
-                user = authenticate(username=username, password=password)
-                login(request, user)
-                return Response("Sign up successful")
+            if not request.user.is_authenticated:
+                if not User.objects.filter(email=email).exists():
+                    User.objects.create_user(
+                        username=username, password=password, email=email)
+                    user = authenticate(username=username, password=password)
+                    login(request, user)
+                    return Response("Sign up successful")
+                else:
+                    return Response("User already exists")
             else:
-                return Response("User already exists")
+                return Response("You are already logged in")
+        except Exception as e:
+            return Response("Sign up failed. "+str(e))
+
+
+class UserLogin(views.APIView):
+    def post(self, request):
+        username = request.data['name']
+        password = request.data['password']
+        try:
+            if not request.user.is_authenticated:
+                user = authenticate(username=username, password=password)
+                if user is not None:
+                    login(request, user)
+                    return Response("Login successful")
+                else:
+                    return Response("User does not exist")
+            else:
+                return Response("You are already logged in")
         except Exception as e:
             return Response("Sign up failed. "+str(e))
 
