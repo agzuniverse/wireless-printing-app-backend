@@ -35,3 +35,12 @@ class UserSignUp(views.APIView):
                 return Response("User already exists")
         except Exception as e:
             return Response("Sign up failed. "+str(e))
+
+
+class UserLogout(views.APIView):
+    def get(self, request):
+        if request.user.is_authenticated:
+            logout(request)
+            return Response("Logout successful")
+        else:
+            return Response("You must log in to log out")

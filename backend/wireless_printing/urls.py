@@ -8,5 +8,6 @@ router.register('test', views.TestView)
 urlpatterns = [
     path('index/', views.index, name='index'),
     path('signup/', views.UserSignUp.as_view()),
+    path('logout/', views.UserLogout.as_view()),
     path('', include(router.urls))
 ]
