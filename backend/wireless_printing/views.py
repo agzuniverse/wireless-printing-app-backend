@@ -71,5 +71,5 @@ class GetCredits(views.APIView):
     def get(self, request):
         if request.user.is_authenticated:
             credits = UserData.objects.get(id=request.user)
-            res = serializers.serialize("json", credits)
+            res = serializers.serialize("json", [credits])
             return Response(res)
