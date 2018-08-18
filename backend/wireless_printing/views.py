@@ -73,3 +73,12 @@ class GetCredits(views.APIView):
             credits = UserData.objects.get(id=request.user)
             res = serializers.serialize("json", [credits])
             return Response(res)
+
+
+def remove_credits(user, credits_to_remove):
+    data = UserData.objects.get(id=user)
+    if data.credits - credits_to_remove >= 0:
+        data.credits -= credits_to_remove
+        data.save()
+        return True
+    return False
