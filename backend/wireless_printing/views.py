@@ -71,10 +71,33 @@ class GetCredits(views.APIView):
         return Response(res)
 
 
-def remove_credits(user, credits_to_remove):
+class UploadForPrinting(views.APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        path = request['files'].file.path
+        from_page = request['from']
+        to_page = request['to']
+        credits = from_page - to_page
+        color = request['color']
+
+        if remove_credits(request.user, credits, False):
+            print_file(path, from_page, to_page, color)
+            remove_credits(request.user, credits, True)
+            return Response("Document printed successfully. " + credits + " credits used up")
+        return Response("You do not have enough credits")
+
+
+def remove_credits(user, credits_to_remove, printing_complete):
     data = UserData.objects.get(id=user)
     if data.credits - credits_to_remove >= 0:
-        data.credits -= credits_to_remove
-        data.save()
+        if printing_complete:
+            data.credits -= credits_to_remove
+            data.save()
         return True
     return False
+
+
+def print_file(path, from_page, to_page, color):
+    # SEND FILE TO PRINTER FOR PRINTING
+    pass
