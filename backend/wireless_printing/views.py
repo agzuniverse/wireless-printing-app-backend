@@ -51,7 +51,7 @@ class UserLogin(views.APIView):
                     login(request, user)
                     return Response("Login successful")
                 else:
-                    return Response("User does not exist")
+                    return Response("Username or password incorrect")
             else:
                 return Response("You are already logged in")
         except Exception as e:
