@@ -10,3 +10,9 @@ class Test(models.Model):
 class UserData(models.Model):
     id = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
     credits = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.id.username
+
+    class Meta:
+        verbose_name_plural = "UserData"
