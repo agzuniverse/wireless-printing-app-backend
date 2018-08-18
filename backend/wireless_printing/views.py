@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework import views
+from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from .models import Test, UserData
 from .serializers import TestSerializer
