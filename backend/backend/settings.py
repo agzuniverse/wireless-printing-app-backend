@@ -127,3 +127,5 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     )
 }
+
+CELERY_BROKER_URL = 'amqp://admin:passwordpassword@localhost/q'

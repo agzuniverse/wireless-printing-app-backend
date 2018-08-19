@@ -10,6 +10,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import Test, UserData
 from .serializers import TestSerializer
+from .tasks import print_file
+from .util import remove_credits
 
 
 def index(request):
@@ -82,22 +84,7 @@ class UploadForPrinting(views.APIView):
         color = request['color']
 
         if remove_credits(request.user, credits, False):
-            print_file(path, from_page, to_page, color)
-            remove_credits(request.user, credits, True)
-            return Response("Document printed successfully. " + credits + " credits used up")
+            print_file.delay(path, from_page, to_page,
+                             color, credits, request.user)
+            return Response("Document printing... please wait")
         return Response("You do not have enough credits")
-
-
-def remove_credits(user, credits_to_remove, printing_complete):
-    data = UserData.objects.get(id=user)
-    if data.credits - credits_to_remove >= 0:
-        if printing_complete:
-            data.credits -= credits_to_remove
-            data.save()
-        return True
-    return False
-
-
-def print_file(path, from_page, to_page, color):
-    # SEND FILE TO PRINTER FOR PRINTING
-    pass
