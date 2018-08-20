@@ -11,6 +11,7 @@ A task queue implemented with RabbitMQ + Celery is used to make the printing act
 - Install Python 3.x
 - Install virtualenv and pip (Typically is included with the Python installation)
 - Install [RabbitMQ](http://www.rabbitmq.com/download.html) (Also typically requires you to install Erlang because RabbitMQ runs on Erlang VM.)
+- Install [PostgreSQL](https://www.postgresql.org/download/)
 
 ## Setup
 
@@ -19,7 +20,15 @@ A task queue implemented with RabbitMQ + Celery is used to make the printing act
 - Activate the `virtualenv` by running `server/Scripts/activate` (`activate.bat` for Windows users)
 
 * Install requirements with `pip install -r requirements.txt`
-* From `backend/`, Run the following commands:
+* Configure PostgreSQL database (either from PSQL shell or from a graphical application like pgAdmin3):
+
+```sh
+CREATE DATABASE wireless_printer;
+CREATE USER admin WITH PASSWORD 'pass';
+GRANT ALL PRIVILEGES ON DATABASE wireless_printer TO admin;
+```
+
+- From `backend/`, Run the following commands:
 
 ```sh
 python manage.py makemigrations
@@ -32,10 +41,13 @@ Enter username and password when promted during superuser creation.
 - run `python manage.py runserver` to start the Django server.
 
 * In a new terminal, create a new administrator in RabbitMQ (Use rabbitmqctl.bat in a cmd with administrative permissions for the following steps if you're on Windows.)
-  - sudo rabbitmqctl add_user username password
-  - sudo rabbitmqctl set_user_tags username administrator
-  - sudo rabbitmqctl set_permissions username ".\*" ".\*" ".\*"
-  - sudo rabbitmq-plugins enable rabbitmq_management
+
+```sh
+sudo rabbitmqctl add_user username password
+sudo rabbitmqctl set_user_tags username administrator
+sudo rabbitmqctl set_permissions username ".\*" ".\*" ".\*"
+sudo rabbitmq-plugins enable rabbitmq_management
+```
 
 - Now visit `localhost:15672` in your browser to make sure RabbitMQ is running. (You'll be prompted to log into RabbitMQ dashboard. Login with the user you just created.)
 
@@ -43,8 +55,3 @@ Enter username and password when promted during superuser creation.
 - Run `celery -A backend worker -l info` (For Windows users run `celery -A backend --pool=eventlet`)
 
 * That's it!
-
-### TO DO
-
-- Move from SQLite3 to PostgreSQL database
-- Add a wrapper function around printing to handle all possible errors and to optimize the process.
