@@ -16,10 +16,10 @@ A task queue implemented with RabbitMQ + Celery is used to make the printing act
 ## Setup
 
 - Clone this repo
-- Run `virtualenv server`
-- Activate the `virtualenv` by running `server/Scripts/activate` (`activate.bat` for Windows users)
+- Run `virtualenv -p server` to create a virtual environment.
+- Activate the virtual environment by running `server/Scripts/activate` (`activate.bat` for Windows users) or `source server/bin/activate` (for Linux users)
 
-* Install requirements with `pip install -r requirements.txt`
+* Install all dependencies with `pip install -r requirements.txt`
 * Configure PostgreSQL database (either from PSQL shell or from a graphical application like pgAdmin3):
 
 ```sh
