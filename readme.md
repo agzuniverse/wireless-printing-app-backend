@@ -16,7 +16,7 @@ A task queue implemented with RabbitMQ + Celery is used to make the printing act
 ## Setup
 
 - Clone this repo
-- Run `virtualenv -p server` to create a virtual environment.
+- Run `virtualenv server` to create a virtual environment.
 - Activate the virtual environment by running `server/Scripts/activate` (`activate.bat` for Windows users) or `source server/bin/activate` (for Linux users)
 
 * Install all dependencies with `pip install -r requirements.txt`
