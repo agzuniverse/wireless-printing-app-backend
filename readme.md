@@ -10,7 +10,7 @@ A task queue implemented with RabbitMQ + Celery is used to make the printing act
 
 - Install Python 3.x
 - Install virtualenv and pip (Typically is included with the Python installation)
-- Install [RabbitMQ](http://www.rabbitmq.com/download.html) (Also typically requires you to install Erlang because RabbitMQ runs on Erlang VM.)
+> - Install [RabbitMQ](http://www.rabbitmq.com/download.html) (Also typically requires you to install Erlang because RabbitMQ runs on Erlang VM.)
 - Install [PostgreSQL](https://www.postgresql.org/download/)
 
 ## Setup
