@@ -5,7 +5,7 @@ billiard==3.5.0.4
 celery==4.2.1
 colorama==0.3.9
 Django==2.1.7
-djangorestframework==3.8.2
+djangorestframework==3.11.2
 dnspython==1.15.0
 eventlet==0.24.1
 greenlet==0.4.14
